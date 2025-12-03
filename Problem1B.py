@@ -8,19 +8,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader
 
-# Set random seeds for reproducibility
 torch.manual_seed(42)
 np.random.seed(42)
 
-# Check if GPU is available
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'Using device: {device}')
 if torch.cuda.is_available():
     print(f'GPU Device: {torch.cuda.get_device_name(0)}')
 
-# ==========================================
-# STEP 1: Load and Preprocess CIFAR-10 Data
-# ==========================================
+
 
 # Define transformations for training and testing
 transform_train = transforms.Compose([
