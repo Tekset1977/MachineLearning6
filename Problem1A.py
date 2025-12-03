@@ -8,17 +8,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader
 
-# Set random seeds for reproducibility
+# Set random seed
 torch.manual_seed(42)
 np.random.seed(42)
 
-# Check if GPU is available
+#GPU Check
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'Using device: {device}')
 
-# ==========================================
-# STEP 1: Load and Preprocess CIFAR-10 Data
-# ==========================================
+
 
 # Define transformations for training and testing
 transform_train = transforms.Compose([
@@ -51,10 +49,7 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer',
 
 print(f"Training samples: {len(trainset)}")
 print(f"Test samples: {len(testset)}")
-
-# ==========================================
-# STEP 2: Define the CNN Architecture
-# ==========================================
+#CNN Architecture
 
 class CIFAR10_CNN(nn.Module):
     def __init__(self, num_classes=10):
@@ -107,14 +102,13 @@ class CIFAR10_CNN(nn.Module):
 
         return x
 
-# Initialize the model
+#Init
 model = CIFAR10_CNN(num_classes=10).to(device)
 print("\nModel Architecture:")
 print(model)
 
-# ==========================================
-# STEP 3: Calculate Model Size
-# ==========================================
+# Model Size
+
 
 def count_parameters(model):
     """Count total and trainable parameters"""
@@ -123,16 +117,14 @@ def count_parameters(model):
     return total_params, trainable_params
 
 total_params, trainable_params = count_parameters(model)
-model_size_mb = total_params * 4 / (1024 ** 2)  # Assuming float32 (4 bytes)
+model_size_mb = total_params * 4 / (1024 ** 2)  # Assuming float32 
 
 print(f"\nModel Statistics:")
 print(f"Total parameters: {total_params:,}")
 print(f"Trainable parameters: {trainable_params:,}")
 print(f"Model size: {model_size_mb:.2f} MB")
 
-# ==========================================
-# STEP 4: Define Loss Function and Optimizer
-# ==========================================
+# Define Loss Function and Optimiser
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -141,10 +133,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 scaler = torch.cuda.amp.GradScaler() if torch.cuda.is_available() else None
 print(f"Using mixed precision training: {scaler is not None}")
 
-# ==========================================
-# STEP 5: Training Function
-# ==========================================
-
+#Training 
 def train_epoch(model, trainloader, criterion, optimizer, device, epoch, num_epochs, scaler=None):
     """Train for one epoch with progress printing"""
     import sys
@@ -189,9 +178,7 @@ def train_epoch(model, trainloader, criterion, optimizer, device, epoch, num_epo
 
     return epoch_loss, epoch_acc
 
-# ==========================================
-# STEP 6: Evaluation Function
-# ==========================================
+#Eval
 
 def evaluate(model, testloader, criterion, device):
     """Evaluate the model on test set"""
@@ -217,9 +204,7 @@ def evaluate(model, testloader, criterion, device):
 
     return test_loss, test_acc
 
-# ==========================================
-# STEP 7: Train for 300 Epochs
-# ==========================================
+#training 300 epkj
 
 print("\n" + "="*50)
 print("Starting Training for 300 Epochs")
@@ -265,9 +250,7 @@ for epoch in range(num_epochs):
 end_time = time.time()
 training_time = end_time - start_time
 
-# ==========================================
-# STEP 8: Final Evaluation
-# ==========================================
+#print
 
 print("\n" + "="*50)
 print("Training Complete!")
@@ -284,9 +267,7 @@ print(f"Model Size: {model_size_mb:.2f} MB")
 print(f"Total Parameters: {total_params:,}")
 print("="*50)
 
-# ==========================================
-# STEP 9: Plot Training History
-# ==========================================
+
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
 
@@ -318,9 +299,6 @@ plt.show()
 
 print("\nTraining curves saved as 'training_history.png'")
 
-# ==========================================
-# STEP 10: Save the Model
-# ==========================================
 
 torch.save({
     'epoch': num_epochs,
